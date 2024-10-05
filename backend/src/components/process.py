@@ -13,6 +13,7 @@ from typing import List, Dict
 from pricing import estimate_price
 from recognition import recognize_items, generate_description
 from publishing import publish_to_social_media
+from image import upload_image
 
 def process_listing(image_data: str, user_description: str) -> Dict:
     """
@@ -25,10 +26,11 @@ def process_listing(image_data: str, user_description: str) -> Dict:
     Returns:
     Dict: Processed listing information
     """
-    recognized_items = recognize_items(image_data)
-    ai_description = generate_description(image_data, recognized_items, user_description)
+    image_url = upload_image(image_data)
+    recognized_items = recognize_items(image_url)
+    ai_description = generate_description(image_url, recognized_items, user_description)
     estimated_price = estimate_price(recognized_items, ai_description)
-    publish_result = publish_to_social_media(image_data, ai_description, estimated_price)
+    publish_result = publish_to_social_media(image_url, ai_description, estimated_price)
     
     return {
         "recognized_items": recognized_items,
