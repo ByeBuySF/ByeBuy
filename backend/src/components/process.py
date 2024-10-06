@@ -11,30 +11,39 @@ import requests
 
 from typing import List, Dict
 from pricing import estimate_price
-from recognition import recognize_items, generate_description
-from publishing import publish_to_social_media
+from recognition import image_recognition
+from publishing import send_message, generate_sales_message
+import ast
 
-def process_listing(image_data: str, user_description: str) -> Dict:
+async def process_listing(image:str, image_link: str) -> List:
     """
     Main pipeline function to process a listing.
     
     Args:
-    image_data (str): Base64 encoded image data
-    user_description (str): User-provided description of the item(s)
+    image (str): Base64 encoded image data
+    image_link: link for image AWS
     
     Returns:
-    Dict: Processed listing information
+    list: Processed listing information
     """
-    recognized_items = recognize_items(image_data)
-    ai_description = generate_description(image_data, recognized_items, user_description)
-    estimated_price = estimate_price(recognized_items, ai_description)
-    publish_result = publish_to_social_media(image_data, ai_description, estimated_price)
-    
-    return {
-        "recognized_items": recognized_items,
-        "ai_description": ai_description,
-        "estimated_price": estimated_price,
-        "publish_result": publish_result
-    }
 
+    recognized_items = ast.literal_eval(
+                        image_recognition(image)
+                        )
+                        
+    posts = []
+    for item in recognized_items:
+        
+        description = ast.literal_eval(item)
+        estimated_price = estimate_price(item)
+        description["price"] = estimated_price
 
+        message = generate_sales_message(description)
+        description["message"] = message
+
+        post_link = await send_message(message, image_link)
+        description["post_link"] = post_link
+
+        posts.append(description)
+
+    return posts
