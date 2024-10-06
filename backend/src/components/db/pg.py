@@ -11,21 +11,23 @@ def insert_data_via_graphql(data):
   }
   payload = {
     "query": """
-      mutation InsertTransaction($image_url: String!, $recognized_items: String!, $ai_description: String!, $estimated_price: Int!, $publish_result: String!) {
-        insert_transactions_one(object: {image_url: $image_url, recognized_items: $recognized_items, ai_description: $ai_description, estimated_price: $estimated_price, publish_result: $publish_result}) {
+      mutation InsertProduct($data: jsonb, $pricing: Int, $state: String) {
+        insert_Product_one(object: {
+          pricing: $pricing,
+          data: $data,
+          state:$state,
+        }) {
           id
         }
       }
     """,
     "variables": {
-      "image_url": data["image_url"],
-      "recognized_items": data["recognized_items"],
-      "ai_description": data["ai_description"],
-      "estimated_price": data["estimated_price"],
-      "publish_result": data["publish_result"]
+      "pricing": data["pricing"],
+      "state": data["state"],
+      "data": data["data"],
     }
   }
 
   # Send the graphql request
-  response = requests.post("https://api.hasura.io/v1/graphql", headers=headers, json=payload)
+  response = requests.post("https://tomegg-dev.hasura.app/v1/graphql", headers=headers, json=payload)
   return response.json()
