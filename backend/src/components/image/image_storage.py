@@ -41,7 +41,7 @@ def upload_image(image_data: str) -> str:
     # Get the URL of the uploaded image
     url = s3.generate_presigned_url(
         'get_object',
-        Params={'Bucket': os.environ['AWS_BUCKET_NAME'], 'Key': 'listings'},
+        Params={'Bucket': os.environ['AWS_BUCKET_NAME'], 'Key': file_name},
         ExpiresIn=3600
     )
 

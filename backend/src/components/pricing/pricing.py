@@ -3,7 +3,6 @@ import requests
 import json
 import re
 from openai import OpenAI
-from dotenv import load_dotenv
 
 # json = {"name": "Sofa", "description": "Used, Gray, Leather", "condition": "Good"}
 # 
@@ -24,10 +23,9 @@ def pricing(json):
     """
 
     # Load environment variables from .env file
-    load_dotenv()
 
     # Get the API key from the environment variables
-    api_key = os.getenv('API_KEY')
+    api_key = os.getenv('OPENAI_API_KEY')
      
     # Initialize OpenAI client
     client = OpenAI(api_key=api_key)
