@@ -1,30 +1,47 @@
 from typing import List, Dict
+from openai import OpenAI
+from PIL import Image
+import base64
+import io
+import os
 
-def recognize_items(image_data: str) -> List[str]:
+def image_recognition(base64_image: str) -> list:
     """
-    Perform object detection on the image to determine the number and types of items.
+    Pipeline for recognizing objects on the image
     
     Args:
-    image_data (str): Base64 encoded image data
+    base64_image (str): Base64 encoded image data
     
     Returns:
-    List[str]: List of recognized items
+    List: JSON for each object consisting of name, description and condition
     """
-    # TODO: Implement object detection using AI component (ChatGPT)
-    pass
 
+    client = OpenAI(api_key = os.environ["API_KEY"])
 
-def generate_description(image_data: str, recognized_items: List[str], user_description: str) -> str:
-    """
-    Generate a text description of the items using AI.
-    
-    Args:
-    image_data (str): Base64 encoded image data
-    recognized_items (List[str]): List of recognized items from object detection
-    user_description (str): User-provided description of the item(s)
-    
-    Returns:
-    str: AI-generated description
-    """
-    # TODO: Implement text description generation using AI component (ChatGPT)
-    pass
+    prompt_message = """You are the best image recognition model in the world. 
+    I want you to scan the image and analyze all the items you see there. 
+    For each item that you were able to recognize I want you to provide a name, a description and evaluate the condition of the item.
+    Condition includes: how old is the item, is it broken or not, does it look good, is it damaged, is it dirty. Be precise and explain everything.
+    Your response MUST be a list of jsons that looks like:
+    [{"name": "item1_name", "description": "item1 description", "condition": "item1 condition explanation"}, {item2 json here}]
+    where each json corresponds to 1 item from the image. Do not add any additional keys, jsons or lists."""
+
+    PROMPT_MESSAGES = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": prompt_message},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+            ],
+        },
+    ]
+
+    params = {
+        "model": "gpt-4-vision-preview",
+        "messages": PROMPT_MESSAGES,
+        "max_tokens": 1024,
+    }
+
+    result = client.chat.completions.create(**params)
+    text = result.choices[0].message.content
+    return text

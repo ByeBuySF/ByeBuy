@@ -1,18 +1,45 @@
-import requests
 from typing import Dict
+import asyncio
+from telegram import Bot
 
-def publish_to_social_media(image_data: str, description: str, price: float) -> Dict:
+async def send_message(message: str, image_link: str):
     """
-    Publish the listing to social media using Facebook Graph API.
+    Sends a message to a telegram channel
     
     Args:
-    image_data (str): Base64 encoded image data
-    description (str): AI-generated description of the items
-    price (float): Estimated price of the items
-    
-    Returns:
-    Dict: Result of the publishing operation
-    """
-    # TODO: Implement publishing to social media via Facebook Graph API
-    pass
+    message (str): message with the complete description of an item
+    image_link (str): image link from AWS
 
+    Returns:
+    str: post link
+    """
+
+    channel_username = "@ByeBuySF"
+    bot = Bot(token=os.environ["BOT_TOKEN"])
+
+    sent_message = await bot.send_photo(chat_id=channel_username, photo=image_file, caption=message)
+    
+    # Generate the post link
+    message_id = sent_message.message_id
+    channel_name = channel_username.lstrip('@')
+    post_link = f"https://t.me/{channel_name}/{message_id}"
+    
+    return post_link
+
+
+def generate_sales_message(item):
+
+    message = f"""
+🛍️ For Sale: {item['name'].title()} 🛍️
+
+📦 Item Description:
+{item['description']}
+
+🔍 Condition:
+{item['condition']}
+
+💰 Price: ${item['price']}
+
+"""
+
+    return message
