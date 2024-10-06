@@ -1,10 +1,10 @@
 # Simple Python web server 
 from flask import Flask, jsonify, request
 from dotenv import load_dotenv
-
+import os
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, port=os.environ["PORT"])
 from components.image.image_storage import upload_image
 from components.process import process_listing
 from components.db.pg import insert_data_via_graphql
