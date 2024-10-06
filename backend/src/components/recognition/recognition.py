@@ -1,6 +1,5 @@
 from typing import List, Dict
 from openai import OpenAI
-from PIL import Image
 import base64
 import io
 import os
@@ -16,7 +15,7 @@ def image_recognition(base64_image: str) -> list:
     List: JSON for each object consisting of name, description and condition
     """
 
-    client = OpenAI(api_key = os.environ["API_KEY"])
+    client = OpenAI(api_key = os.environ["OPENAI_API_KEY"])
 
     prompt_message = """You are the best image recognition model in the world. 
     I want you to scan the image and analyze all the items you see there. 
@@ -24,7 +23,7 @@ def image_recognition(base64_image: str) -> list:
     Condition includes: how old is the item, is it broken or not, does it look good, is it damaged, is it dirty. Be precise and explain everything.
     Your response MUST be a list of jsons that looks like:
     [{"name": "item1_name", "description": "item1 description", "condition": "item1 condition explanation"}, {item2 json here}]
-    where each json corresponds to 1 item from the image. Do not add any additional keys, jsons or lists."""
+    where each json corresponds to 1 item from the image. Do not add any additional keys, jsons or lists. All quotation marks should use double quotes."""
 
     PROMPT_MESSAGES = [
         {

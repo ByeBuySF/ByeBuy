@@ -8,11 +8,11 @@
 #   a. Publishing to social media via Facebook Graph API 
 
 import requests
-
+import json
 from typing import List, Dict
-from pricing import estimate_price
-from recognition import image_recognition
-from publishing import send_message, generate_sales_message
+from components.pricing.pricing import pricing
+from components.recognition.recognition import image_recognition
+from components.publishing.publishing import send_message, generate_sales_message
 import ast
 
 async def process_listing(image:str, image_link: str) -> List:
@@ -27,15 +27,16 @@ async def process_listing(image:str, image_link: str) -> List:
     list: Processed listing information
     """
 
+    
+
     recognized_items = ast.literal_eval(
                         image_recognition(image)
                         )
                         
     posts = []
     for item in recognized_items:
-        
-        description = ast.literal_eval(item)
-        estimated_price = estimate_price(item)
+        description = item
+        estimated_price = pricing(item)
         description["price"] = estimated_price
 
         message = generate_sales_message(description)

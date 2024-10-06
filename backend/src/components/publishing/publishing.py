@@ -1,6 +1,7 @@
 from typing import Dict
 import asyncio
 from telegram import Bot
+import os
 
 async def send_message(message: str, image_link: str):
     """
@@ -15,9 +16,10 @@ async def send_message(message: str, image_link: str):
     """
 
     channel_username = "@ByeBuySF"
-    bot = Bot(token=os.environ["BOT_TOKEN"])
-
-    sent_message = await bot.send_photo(chat_id=channel_username, photo=image_file, caption=message)
+    bot = Bot(token=os.environ["TELEGRAM_BOT_TOKEN"])
+    
+    print(image_link)
+    sent_message = await bot.send_photo(chat_id=channel_username, photo=image_link, caption=message)
     
     # Generate the post link
     message_id = sent_message.message_id
