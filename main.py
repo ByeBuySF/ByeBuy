@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 
-app = Flask(__name__, port=os.environ["PORT"])
+app = Flask(__name__)
 from components.image.image_storage import upload_image
 from components.process import process_listing
 from components.db.pg import insert_data_via_graphql
