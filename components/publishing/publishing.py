@@ -1,5 +1,3 @@
-from typing import Dict
-import asyncio
 from telegram import Bot
 import os
 

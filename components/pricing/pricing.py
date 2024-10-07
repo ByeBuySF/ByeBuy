@@ -1,7 +1,4 @@
 import os
-import requests
-import json
-import re
 from openai import OpenAI
 
 # json = {"name": "Sofa", "description": "Used, Gray, Leather", "condition": "Good"}

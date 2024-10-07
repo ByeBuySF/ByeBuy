@@ -1,7 +1,4 @@
-from typing import List, Dict
 from openai import OpenAI
-import base64
-import io
 import os
 
 def image_recognition(base64_image: str) -> list:
