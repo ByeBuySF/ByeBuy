@@ -1,7 +1,6 @@
 # Simple Python web server 
-from flask import Flask, jsonify, request
+from flask import Flask, request
 from dotenv import load_dotenv
-import os
 load_dotenv()
 
 app = Flask(__name__)
